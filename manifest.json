@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Alert Me - Google Meet",
+  "description": "Notify when certain words are being spoken in a meeting, your friendly reminder!",
+  "version": "0.2.0",
+  "content_scripts": [{
+    "matches": ["https://meet.google.com/*"],
+    "js": ["content.js"],
+    "all_frames": false
+  }],
+  "action": {
+    "default_popup": "./src/popup.html",
+    "default_title": "Alert Me - Google Meet"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "images/bell16.png",
+    "48": "images/bell48.png",
+    "128": "images/bell128.png"
+  },
+  "permissions": ["notifications", "storage"],
+  "host_permissions": [
+    "https://*.googleusercontent.com/*",
+    "https://meet.google.com/*"
+  ]
+}

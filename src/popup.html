@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alert Me — Google Meet</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+
+  <style>
+    .material-icons.remove {
+      color: black;
+      font-size: 14px;
+      line-height: inherit;
+      margin-right: 5px;
+      border-radius: 10px;
+      transition: background-color 0.1s ease-in-out;
+    }
+
+    .material-icons.remove:hover {
+      cursor: pointer;
+      font-weight: bolder;
+    }
+  </style>
+</head>
+
+<body class="body">
+  <header class="header">
+    <h1 class="header__title">Alert Me</h1>
+    <h2 class="header__lead">
+      Notify on certain texts being spoken in the meeting
+    </h2>
+  </header>
+
+  <main class="main">
+    <section class="words">
+      <h1 class="words__title">Your Words</h1>
+      <div class="words__boxes"></div>
+    </section>
+
+    <section class="create">
+      <form autocomplete="off" class="create__form">
+        <input type="text" class="create__input" id="alert-words" placeholder="Type your keywords..."
+          aria-describedby="alert-words" />
+        <button id="add-btn" class="create__btn" type="submit">Add</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__status">
+      <div class="footer__status--btn"></div>
+      <div id="alert-msg" class="footer__status--msg">Not on call</div>
+    </div>
+  </footer>
+  <script src="./popup.js"></script>
+</body>
+
+</html>
