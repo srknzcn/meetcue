@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "MeetCue - Google Meet",
   "description": "Get a desktop notification the moment your keywords are spoken in Google Meet captions.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "content_scripts": [{
     "matches": ["https://meet.google.com/*"],
     "js": ["content.js"],
@@ -24,5 +24,6 @@
   "host_permissions": [
     "https://*.googleusercontent.com/*",
     "https://meet.google.com/*"
-  ]
+  ],
+  "optional_host_permissions": ["https://*/*", "http://*/*"]
 }

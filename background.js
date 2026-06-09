@@ -36,6 +36,19 @@ chrome.runtime.onMessage.addListener((data) => {
   const create = (iconUrl) =>
     chrome.notifications.create("", { ...baseOptions, iconUrl });
 
+  // Mirror the alert to ntfy (phone / Apple Watch) when configured. content.js
+  // only sends this message while the Meet tab is unfocused, so the "alert only
+  // when you're elsewhere" rule carries over for free. Failures are swallowed —
+  // a down ntfy server must never break the desktop notification.
+  chrome.storage.sync.get(["ntfy"], ({ ntfy }) => {
+    if (!ntfy || !ntfy.enabled || !ntfy.server || !ntfy.topic) return;
+    fetch(`${ntfy.server}/${encodeURIComponent(ntfy.topic)}`, {
+      method: "POST",
+      headers: { Title: "MeetCue", Tags: "bell" },
+      body: `${speaker}: ${speech}`,
+    }).catch(() => {});
+  });
+
   // Try the speaker's avatar; fall back to the extension icon on any failure.
   if (photo) {
     toDataURL(photo)

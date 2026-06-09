@@ -130,4 +130,108 @@
   document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault();
   });
+
+  ////////////////////////////////////////////////////////////////////////////
+  // ntfy forwarding settings (forward alerts to phone / Apple Watch)
+  ////////////////////////////////////////////////////////////////////////////
+  const ntfyEnabled = document.getElementById("ntfy-enabled");
+  const ntfyServer = document.getElementById("ntfy-server");
+  const ntfyTopic = document.getElementById("ntfy-topic");
+  const ntfySaveBtn = document.getElementById("ntfy-save");
+  const ntfyTestBtn = document.getElementById("ntfy-test");
+  const ntfyStatus = document.getElementById("ntfy-status");
+
+  const setNtfyStatus = (message, state) => {
+    ntfyStatus.innerText = message || "";
+    if (state) ntfyStatus.setAttribute("data-state", state);
+    else ntfyStatus.removeAttribute("data-state");
+  };
+
+  // Normalize a server field into a clean origin URL: prepend https:// when no
+  // scheme is given, and drop trailing slashes so `${server}/${topic}` is clean.
+  const normalizeServer = (raw) => {
+    let s = (raw || "").trim().replace(/\/+$/, "");
+    if (s && !/^https?:\/\//i.test(s)) s = "https://" + s;
+    return s;
+  };
+
+  // Derive the `<origin>/*` match pattern needed to request host permission.
+  const originPattern = (server) => {
+    try {
+      return new URL(server).origin + "/*";
+    } catch {
+      return null;
+    }
+  };
+
+  // Ask for host permission for this server's origin (must run in a user
+  // gesture — both callers are click handlers). Granted origins apply to every
+  // extension context, so the background service worker can fetch too.
+  const ensurePermission = async (server) => {
+    const pattern = originPattern(server);
+    if (!pattern) return false;
+    return chrome.permissions.request({ origins: [pattern] });
+  };
+
+  // Load saved settings into the form.
+  chrome.storage.sync.get(["ntfy"], ({ ntfy }) => {
+    if (!ntfy) return;
+    ntfyEnabled.checked = !!ntfy.enabled;
+    ntfyServer.value = ntfy.server || "";
+    ntfyTopic.value = ntfy.topic || "";
+  });
+
+  ntfySaveBtn.addEventListener("click", async () => {
+    const enabled = ntfyEnabled.checked;
+    const server = normalizeServer(ntfyServer.value);
+    const topic = ntfyTopic.value.trim();
+    ntfyServer.value = server; // reflect normalization back to the field
+
+    if (enabled && (!server || !topic)) {
+      setNtfyStatus("Sunucu ve topic gerekli", "err");
+      return;
+    }
+    if (enabled && server && !originPattern(server)) {
+      setNtfyStatus("Geçersiz sunucu adresi", "err");
+      return;
+    }
+    if (enabled && server && !(await ensurePermission(server))) {
+      setNtfyStatus("Sunucuya erişim izni verilmedi", "err");
+      return;
+    }
+
+    chrome.storage.sync.set({ ntfy: { enabled, server, topic } }, () => {
+      setNtfyStatus("Kaydedildi", "ok");
+    });
+  });
+
+  ntfyTestBtn.addEventListener("click", async () => {
+    const server = normalizeServer(ntfyServer.value);
+    const topic = ntfyTopic.value.trim();
+    ntfyServer.value = server;
+
+    if (!server || !topic) {
+      setNtfyStatus("Önce sunucu ve topic gir", "err");
+      return;
+    }
+    if (!originPattern(server) || !(await ensurePermission(server))) {
+      setNtfyStatus("Sunucuya erişim izni verilmedi", "err");
+      return;
+    }
+
+    setNtfyStatus("Gönderiliyor…");
+    try {
+      const res = await fetch(`${server}/${encodeURIComponent(topic)}`, {
+        method: "POST",
+        headers: { Title: "MeetCue", Tags: "bell" },
+        body: "Test bildirimi — MeetCue çalışıyor.",
+      });
+      setNtfyStatus(
+        res.ok ? "Test gönderildi ✓" : `Sunucu hatası: ${res.status}`,
+        res.ok ? "ok" : "err"
+      );
+    } catch (e) {
+      setNtfyStatus("Gönderilemedi: " + e.message, "err");
+    }
+  });
 })();
