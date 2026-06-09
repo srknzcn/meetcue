@@ -1,1 +1,19 @@
-vendors
+# Dependencies
+node_modules/
+vendors/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Logs & env
+*.log
+.env
+.env.local
+
+# Build output
+dist/
+*.zip
