@@ -16,68 +16,29 @@
   // Constants
   ////////////////////////////////////////////////////////////////////////////
 
-  const bgSuccess = "#6ae97063";
-  const bgInfo = "#cce5ff61";
-  const bgWarning = "#fdff8159";
-  const bgDanger = "#ff8c8c73";
+  const VALID_STATUSES = ["success", "info", "warning", "danger"];
 
   // Status DOM elements
   const footerDiv = document.querySelector("footer.footer");
   const footerMsg = document.getElementById("alert-msg");
 
+  // Reflect a status log onto the footer (dot color + message) via data-status.
+  const applyStatus = (log) => {
+    if (!log) return;
+    const status = VALID_STATUSES.includes(log.status) ? log.status : "info";
+    footerDiv.setAttribute("data-status", status);
+    if (log.message) footerMsg.innerText = log.message;
+  };
+
   // Show pre-existing status
   chrome.storage.sync.get(["details"], (data) => {
-    if (data.details) {
-      const log = data.details.options;
-
-      switch (log.status) {
-        case "success":
-          footerDiv.style.backgroundColor = bgSuccess;
-          footerMsg.innerText = log.message;
-          break;
-        case "warning":
-          footerDiv.style.backgroundColor = bgWarning;
-          footerMsg.innerText = log.message;
-          break;
-        case "info":
-          footerDiv.style.backgroundColor = bgInfo;
-          footerMsg.innerText = log.message;
-          break;
-        case "danger":
-          footerDiv.style.backgroundColor = bgDanger;
-          footerMsg.innerText = log.message;
-          break;
-        default:
-          footerDiv.style.backgroundColor = bgInfo;
-      }
-    }
+    if (data.details) applyStatus(data.details.options);
   });
 
   // Listen upcoming status from content.js
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.details && changes.details.newValue.type === "log") {
-      const log = changes.details.newValue.options;
-
-      switch (log.status) {
-        case "success":
-          footerDiv.style.backgroundColor = bgSuccess;
-          footerMsg.innerText = log.message;
-          break;
-        case "warning":
-          footerDiv.style.backgroundColor = bgWarning;
-          footerMsg.innerText = log.message;
-          break;
-        case "info":
-          footerDiv.style.backgroundColor = bgInfo;
-          footerMsg.innerText = log.message;
-          break;
-        case "danger":
-          footerDiv.style.backgroundColor = bgDanger;
-          footerMsg.innerText = log.message;
-          break;
-        default:
-          footerDiv.style.backgroundColor = bgInfo;
-      }
+      applyStatus(changes.details.newValue.options);
     }
 
     // ref: https://stackoverflow.com/a/20077854/11674552
@@ -96,13 +57,19 @@
         const wordBox = document.createElement("div");
         wordBox.setAttribute("class", "words__box");
 
-        const crossIcon = document.createElement("span");
-        crossIcon.setAttribute("class", "material-icons remove");
-        crossIcon.innerText = "clear";
+        const pTag = document.createElement("p");
+        pTag.setAttribute("class", "word__ele");
+        pTag.innerText = wordsArray[j];
 
-        crossIcon.addEventListener("click", (e) => {
-          const val = e.target.nextElementSibling.innerText.toLowerCase();
-          e.target.parentElement.remove();
+        const removeBtn = document.createElement("button");
+        removeBtn.setAttribute("class", "words__box-remove");
+        removeBtn.setAttribute("type", "button");
+        removeBtn.setAttribute("aria-label", `Remove ${wordsArray[j]}`);
+        removeBtn.innerText = "×";
+
+        removeBtn.addEventListener("click", (e) => {
+          const val = pTag.innerText.toLowerCase();
+          e.currentTarget.parentElement.remove();
 
           chrome.storage.sync.get(["alertWords"], (data) => {
             const alertWords = data.alertWords;
@@ -116,11 +83,7 @@
           });
         });
 
-        const pTag = document.createElement("p");
-        pTag.setAttribute("class", "word__ele");
-        pTag.innerText = wordsArray[j];
-
-        wordBox.append(crossIcon, pTag);
+        wordBox.append(pTag, removeBtn);
 
         const parentBox = document.querySelector(".words__boxes");
         parentBox.appendChild(wordBox);

@@ -6,56 +6,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MeetCue — Google Meet</title>
 
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
-
-  <style>
-    .material-icons.remove {
-      color: black;
-      font-size: 14px;
-      line-height: inherit;
-      margin-right: 5px;
-      border-radius: 10px;
-      transition: background-color 0.1s ease-in-out;
-    }
-
-    .material-icons.remove:hover {
-      cursor: pointer;
-      font-weight: bolder;
-    }
-  </style>
 </head>
 
 <body class="body">
   <header class="header">
-    <h1 class="header__title">MeetCue</h1>
-    <h2 class="header__lead">
-      Notify on certain texts being spoken in the meeting
-    </h2>
+    <div class="header__brand">
+      <span class="header__logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+      </span>
+      <div class="header__text">
+        <h1 class="header__title">MeetCue</h1>
+        <p class="header__lead">Get pinged when your words come up</p>
+      </div>
+    </div>
   </header>
 
   <main class="main">
     <section class="words">
-      <h1 class="words__title">Your Words</h1>
+      <h2 class="words__title">Your keywords</h2>
       <div class="words__boxes"></div>
     </section>
 
     <section class="create">
       <form autocomplete="off" class="create__form">
-        <input type="text" class="create__input" id="alert-words" placeholder="Type your keywords..."
-          aria-describedby="alert-words" />
-        <button id="add-btn" class="create__btn" type="submit">Add</button>
+        <input type="text" class="create__input" id="alert-words"
+          placeholder="Add a keyword, comma-separated…" aria-label="Add keywords" />
+        <button id="add-btn" class="create__btn" type="submit" aria-label="Add keyword">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
       </form>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="footer__status">
-      <div class="footer__status--btn"></div>
-      <div id="alert-msg" class="footer__status--msg">Not on call</div>
-    </div>
+  <footer class="footer" data-status="idle">
+    <span class="footer__dot" aria-hidden="true"></span>
+    <span id="alert-msg" class="footer__msg">Not on a call</span>
   </footer>
+
   <script src="./popup.js"></script>
 </body>
 
