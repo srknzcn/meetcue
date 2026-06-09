@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Alert Me - Google Meet",
-  "description": "Notify when certain words are being spoken in a meeting, your friendly reminder!",
+  "name": "MeetCue - Google Meet",
+  "description": "Get a desktop notification the moment your keywords are spoken in Google Meet captions.",
   "version": "0.2.0",
   "content_scripts": [{
     "matches": ["https://meet.google.com/*"],
@@ -10,7 +10,7 @@
   }],
   "action": {
     "default_popup": "./src/popup.html",
-    "default_title": "Alert Me - Google Meet"
+    "default_title": "MeetCue - Google Meet"
   },
   "background": {
     "service_worker": "background.js"

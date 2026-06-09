@@ -1,4 +1,4 @@
-console.log("[alert-me-google-meet] loaded");
+console.log("[MeetCue] loaded");
 
 try {
   (() => {
@@ -104,7 +104,7 @@ try {
           osc.stop(start + 0.24);
         });
       } catch (e) {
-        console.warn("[alert-me-google-meet] sound failed", e);
+        console.warn("[MeetCue] sound failed", e);
       }
     };
 
@@ -235,5 +235,5 @@ try {
     if (existing) startWatching(existing);
   })();
 } catch (e) {
-  console.error("[alert-me-google-meet] init error", e);
+  console.error("[MeetCue] init error", e);
 }

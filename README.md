@@ -1,8 +1,8 @@
-# Alert Me — Google Meet
+# MeetCue — Google Meet
 
 <p>
-  <a href="https://github.com/srknzcn/alert-me-google-meet/issues">
-    <img alt="Issues" src="https://img.shields.io/github/issues/srknzcn/alert-me-google-meet?color=0088ff" />
+  <a href="https://github.com/srknzcn/meetcue/issues">
+    <img alt="Issues" src="https://img.shields.io/github/issues/srknzcn/meetcue?color=0088ff" />
   </a>
   <a href="https://www.gnu.org/licenses/gpl-3.0">
     <img alt="License" src="https://img.shields.io/badge/License-GPLv3-blue.svg" />
@@ -10,7 +10,7 @@
   <img alt="Manifest" src="https://img.shields.io/badge/manifest-v3-orange.svg" />
 </p>
 
-Keep half-listening to a long meeting? **Alert Me** watches the live captions in Google Meet and fires a desktop notification the moment one of your chosen keywords is spoken — your name, "action item", "any questions", whatever you tell it to listen for.
+Keep half-listening to a long meeting? **MeetCue** watches the live captions in Google Meet and fires a desktop notification the moment one of your chosen keywords is spoken — your name, "action item", "any questions", whatever you tell it to listen for.
 
 It is a lightweight Chrome extension (Manifest V3) with no backend, no tracking, and no audio processing of its own.
 
@@ -40,7 +40,7 @@ The extension does **not** transcribe speech. It reads the captions that Google 
 
 ## Install (unpacked)
 
-1. Grab the source — download the ZIP from the [releases](https://github.com/srknzcn/alert-me-google-meet/releases) page, or clone this repo.
+1. Grab the source — download the ZIP from the [releases](https://github.com/srknzcn/meetcue/releases) page, or clone this repo.
 2. Unzip it if needed.
 3. Open `chrome://extensions` in Chrome.
 4. Toggle **Developer mode** on (top-right).
@@ -62,11 +62,11 @@ Add or remove keywords any time; changes apply immediately.
 - Allow Chrome to show notifications at the OS level:
   - **Windows:** Settings → System → Notifications → Google Chrome
   - **macOS:** System Settings → Notifications → Google Chrome
-- Open the page console (F12) and check for errors before [filing an issue](https://github.com/srknzcn/alert-me-google-meet/issues).
+- Open the page console (F12) and check for errors before [filing an issue](https://github.com/srknzcn/meetcue/issues).
 
 ## Contributing
 
-Bug reports, feature ideas, and pull requests are welcome. Open an [issue](https://github.com/srknzcn/alert-me-google-meet/issues) first so we can talk it through.
+Bug reports, feature ideas, and pull requests are welcome. Open an [issue](https://github.com/srknzcn/meetcue/issues) first so we can talk it through.
 
 ## License
 
