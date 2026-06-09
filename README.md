@@ -14,6 +14,10 @@ Keep half-listening to a long meeting? **MeetCue** watches the live captions in 
 
 It is a lightweight Chrome extension (Manifest V3) with no backend, no tracking, and no audio processing of its own.
 
+<p align="center">
+  <img src="images/popup.png" alt="MeetCue popup — keyword list with add field and listening status" width="360" />
+</p>
+
 ---
 
 ## How it works
