@@ -111,9 +111,16 @@ try {
     // -------------------------------------------------------------------------
     // Throttle + dedupe so a single utterance fires at most one notification
     // -------------------------------------------------------------------------
+    // Dedupe per caption-line ELEMENT, not per text snapshot. Meet streams a
+    // line's text incrementally (and revises it), so the speech string changes
+    // many times for ONE utterance — keying on the text re-alerts on every
+    // growth. The line element is stable for an utterance's lifetime, so once
+    // we've alerted for a word on this line we don't fire again as it grows. A
+    // genuinely new utterance is a new element, so it can still alert. The
+    // WeakMap auto-frees entries when Meet drops old lines from the DOM.
     let lastAlertAt = 0;
     const THROTTLE_MS = 3000;
-    const alerted = new Set(); // `${speaker}::${speech}` already notified
+    const alertedLines = new WeakMap(); // line element -> Set of words alerted
 
     const scan = (region) => {
       const now = Date.now();
@@ -135,13 +142,16 @@ try {
         // Skip your own speech ("You" / localized self label).
         if (SELF_LABELS.has(speaker.toLowerCase())) return;
 
-        const key = `${speaker}::${speech}`;
-        if (alerted.has(key)) return; // same snapshot already alerted
+        let firedWords = alertedLines.get(line);
+        if (firedWords && firedWords.has(word)) return; // this line already alerted
         if (now - lastAlertAt < THROTTLE_MS) return; // global throttle
 
+        if (!firedWords) {
+          firedWords = new Set();
+          alertedLines.set(line, firedWords);
+        }
         lastAlertAt = now;
-        alerted.add(key);
-        if (alerted.size > 50) alerted.clear(); // keep the set bounded
+        firedWords.add(word);
 
         setStatus("info", "You were notified. Check your notifications");
         playChime();
